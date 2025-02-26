@@ -1,0 +1,70 @@
+﻿@model IEnumerable<MvcNetCoreSessionEmpleados.Models.Empleado>
+
+@{
+    ViewData["Title"] = "EmpleadosAlmacenadosV5";
+}
+
+<h1>Empleados Almacenados V5</h1>
+@if(Context.Session.GetString("IDSEMPLEADOS") == null){
+    <h2>NO EXISTEN EMPLEADOS EN SESSION</h2>
+}
+
+<p>
+    <a asp-controller="Empleados" asp-action="SessionEmpleadosV5">Volver a almacenar empleados</a>
+</p>
+@* si no hay empleados en session, este mensaje saca lo mismo que el if *@
+<h2>@ViewData["MENSAJE"]</h2>
+@if (Model != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdEmpleado)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Apellido)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Oficio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Salario)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdDepartamento)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdEmpleado)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Apellido)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Oficio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Salario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdDepartamento)
+                    </td>
+                    <td>
+                        <a asp-controller="Empleados"
+                           asp-action="EmpleadosAlmacenadosV5"
+                           asp-route-ideliminar="@item.IdEmpleado">
+                            Eliminar Session
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

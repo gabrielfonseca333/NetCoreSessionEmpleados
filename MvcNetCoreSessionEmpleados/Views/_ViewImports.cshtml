@@ -1,0 +1,11 @@
+﻿@using MvcNetCoreSessionEmpleados
+@using MvcNetCoreSessionEmpleados.Models
+
+@* incluimos el using para el sessionextension *@
+@using MvcNetCoreSessionEmpleados.Extensions
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.Extensions.Caching.Memory
+
+@inject IMemoryCache MemoryCache

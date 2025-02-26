@@ -1,0 +1,81 @@
+﻿
+
+@model List<Empleado>
+@{
+	//necesitamos session para saber el dibujo a realizar
+	List<int> ids = Context.Session.GetObject<List<int>>("IDSEMPLEADOS");
+
+    //necesito recuperar de memory cach, como le hago?
+    List<Empleado> empleadosFavoritos = MemoryCache.Get<List<Empleado>>("FAVORITOS");
+
+}
+
+<h1>Session empleados V5</h1>
+
+@if(ids != null){
+    <h3 style="background-color: blue; color: white">
+        Empleados en session: @ids.Count
+    </h3>
+}
+
+@if (empleadosFavoritos != null)
+{
+    <h3 style="background-color: orange; color: orangered">
+        Empleados Favoritos en MemoryCache: @empleadosFavoritos.Count
+    </h3>
+}
+
+<p>
+	<a asp-controller="Empleados" asp-action="EmpleadosAlmacenadosV5">Empleados Almacenados</a>
+</p>
+
+
+
+<h4>@ViewData["MENSAJE"]</h4>
+
+<ul class="list-group">
+    @foreach (Empleado empleado in Model)
+    {
+        <li class="list-group-item list-group-item-info">
+            @empleado.Apellido
+
+            <a class="btn btn-warning" 
+                
+            asp-controller="Empleados"
+               asp-action="SessionEmpleadosV5"
+            asp-route-idFavorito="@empleado.IdEmpleado">
+                Favorito ⭐
+            </a>
+
+
+
+            @* PREGUNTAMOS SI EXISTE SESSION *@
+            @if (ids == null)
+            {
+                <a asp-controller="Empleados"
+                   asp-action="SessionEmpleadosV5"
+                   asp-route-idempleado="@empleado.IdEmpleado">
+                    Almacenar empleado
+                </a>
+            }
+            else
+            {
+                //PREGUNTAMOS SI EL EMPLEADO QUE ESTAMOS DIBUJANDO
+                //ESTA DENTRO DE SESSION
+                if (ids.Contains(empleado.IdEmpleado))
+                {
+                    //DIBUJAMOS LA IMAGEN
+                    <img src="https://img.freepik.com/vector-premium/senal-ok-icono-simbolo-mano_423491-228.jpg?semt=ais_hybrid" style="width:35px; height: 35px" />
+                }
+                else
+                {
+                    <a asp-controller="Empleados"
+                       asp-action="SessionEmpleadosV5"
+                       asp-route-idempleado="@empleado.IdEmpleado">
+                        Almacenar empleado
+                    </a>
+                }
+            }
+        </li>
+    }
+</ul>
