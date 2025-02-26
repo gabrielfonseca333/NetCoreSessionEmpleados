@@ -10,6 +10,18 @@
     <link rel="stylesheet" href="~/MvcNetCoreSessionEmpleados.styles.css" asp-append-version="true" />
 </head>
 <body>
+
+    @{
+        //necesitamos session para saber el dibujo a realizar
+        List<int> ids = Context.Session.GetObject<List<int>>("IDSEMPLEADOS");
+
+        //necesito recuperar de memory cach, como le hago?
+        List<Empleado> empleadosFavoritos = MemoryCache.Get<List<Empleado>>("FAVORITOS");
+
+
+    }
+
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -20,7 +32,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
@@ -28,7 +40,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Empleados" asp-action="SessionSalarios">Session Salarios</a>
-                        </li>
+                        </li> *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Empleados" asp-action="SessionEmpleados">Session Empleados</a>
                         </li>
@@ -44,6 +56,25 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Empleados" asp-action="EmpleadosFavoritos">Empleados Favoritos </a>
                         </li>
+
+                        <li>
+                            @if (ids != null)
+                            {
+                                <h3 style="background-color: blue; color: white">
+                                    Nº Empleados Session: @ids.Count
+                                </h3>
+                            }
+
+                            @if (empleadosFavoritos != null)
+                            {
+                                <h3 style="background-color: orange; color: orangered">
+                                    FAVs: @empleadosFavoritos.Count
+                                </h3>
+                            }
+
+                            
+                        </li>
+
                     </ul>
                 </div>
             </div>

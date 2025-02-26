@@ -2,11 +2,12 @@
 
 @model List<Empleado>
 @{
-	//necesitamos session para saber el dibujo a realizar
-	List<int> ids = Context.Session.GetObject<List<int>>("IDSEMPLEADOS");
+    //necesitamos session para saber el dibujo a realizar
+    List<int> ids = Context.Session.GetObject<List<int>>("IDSEMPLEADOS");
 
     //necesito recuperar de memory cach, como le hago?
     List<Empleado> empleadosFavoritos = MemoryCache.Get<List<Empleado>>("FAVORITOS");
+
 
 }
 
@@ -26,7 +27,7 @@
 }
 
 <p>
-	<a asp-controller="Empleados" asp-action="EmpleadosAlmacenadosV5">Empleados Almacenados</a>
+    <a asp-controller="Empleados" asp-action="EmpleadosAlmacenadosV5">Empleados Almacenados</a>
 </p>
 
 
@@ -39,13 +40,35 @@
         <li class="list-group-item list-group-item-info">
             @empleado.Apellido
 
-            <a class="btn btn-warning" 
-                
-            asp-controller="Empleados"
-               asp-action="SessionEmpleadosV5"
-            asp-route-idFavorito="@empleado.IdEmpleado">
-                Favorito ⭐
-            </a>
+            @if (empleadosFavoritos == null)
+            {
+                <a class="btn btn-warning"
+                   asp-controller="Empleados"
+                   asp-action="SessionEmpleadosV5"
+                   asp-route-idFavorito="@empleado.IdEmpleado">
+                    Favorito ⭐
+                </a>
+            }
+            else
+            {
+                Empleado empFavorito = empleadosFavoritos.Find(x => x.IdEmpleado == empleado.IdEmpleado);
+
+                if (empFavorito != null)
+                {
+                    <img src="https://img.freepik.com/vector-premium/pixel-art-diseno-activos-juego-estrella-dorada_466450-1899.jpg?semt=ais_hybrid" style="width:35px; height: 35px" />
+                }
+                else
+                {
+                    <a class="btn btn-warning"
+                       asp-controller="Empleados"
+                       asp-action="SessionEmpleadosV5"
+                       asp-route-idFavorito="@empleado.IdEmpleado">
+                        Favorito ⭐
+                    </a>
+                }
+            }
+
+            
 
 
 

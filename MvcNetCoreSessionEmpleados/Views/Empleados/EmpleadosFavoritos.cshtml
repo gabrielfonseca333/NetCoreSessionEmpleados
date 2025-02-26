@@ -29,6 +29,7 @@
                 <th>
                     Departamento
                 </th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -46,6 +47,14 @@
                     </td>
                     <td>
                         @empleado.IdDepartamento
+                    </td>
+                    <td>
+                        <a asp-controller="Empleados"
+                        asp-action="EmpleadosFavoritos"
+                        asp-route-idEliminar="@empleado.IdEmpleado" 
+                        class="btn btn-danger">
+                            Borrar Favorito
+                        </a>
                     </td>
                 </tr>
             }

@@ -17,9 +17,27 @@ namespace MvcNetCoreSessionEmpleados.Controllers
             this.memoryCache = memoryCache;
         }
 
-        public IActionResult EmpleadosFavoritos()
+        public IActionResult EmpleadosFavoritos(int? idEliminar)
         {
-            //lo recuperamos desde la vista.
+
+            if(idEliminar != null)
+            {
+                List<Empleado> empleadosFavoritos = this.memoryCache.Get<List<Empleado>>("FAVORITOS");
+
+                Empleado emp = empleadosFavoritos.Find(z => z.IdEmpleado == idEliminar.Value);
+                empleadosFavoritos.Remove(emp);
+
+                if (empleadosFavoritos.Count == 0)
+                {
+                    this.memoryCache.Remove("FAVORITOS");
+                }
+                else
+                {
+                    this.memoryCache.Set("FAVORITOS", empleadosFavoritos);
+                }
+            }
+
+            //los empleados favoritos los recuperamos desde la vista, pq esta en MemoryCache.
             return View();
         }
 
@@ -198,6 +216,7 @@ namespace MvcNetCoreSessionEmpleados.Controllers
             if(idFavorito != null)
             {
                 List<Empleado> empleadosFavoritos;
+              
                 if(this.memoryCache.Get("FAVORITOS") == null)
                 {
                     empleadosFavoritos = new List<Empleado>();
@@ -206,13 +225,16 @@ namespace MvcNetCoreSessionEmpleados.Controllers
                 {
                     empleadosFavoritos = this.memoryCache.Get<List<Empleado>>("FAVORITOS");
                 }
+
                 Empleado emp = await this.repo.FindEmpleadoAsync(idFavorito.Value);
+
                 empleadosFavoritos.Add(emp);
                 this.memoryCache.Set("FAVORITOS", empleadosFavoritos);
-                //ViewData["MENSAJE"] = "Empleado favorito almacenado: " + emp.Apellido;
-                //return View();
+
 
             }
+
+            
 
 
 
@@ -292,16 +314,7 @@ namespace MvcNetCoreSessionEmpleados.Controllers
             }
         }
 
-        public IActionResult EliminarEmpleadoSession(int idEmpleado)
-        {
-            List<int> idsEmpleados = HttpContext.Session.GetObject<List<int>>("IDSEMPLEADOS");
-            if (idsEmpleados != null && idsEmpleados.Contains(idEmpleado))
-            {
-                idsEmpleados.Remove(idEmpleado);
-                HttpContext.Session.SetObject("IDSEMPLEADOS", idsEmpleados);
-            }
-            return RedirectToAction("EmpleadosAlmacenadosV5");
-        }
+        
 
     }
 }
